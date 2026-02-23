@@ -1,0 +1,145 @@
+LAB NOTES — Signal Acquisition & Analysis
+==========================================
+
+CHATGPT LINK
+------------------
+https://chatgpt.com/share/699ad022-1fb0-8012-a9c9-2450fe1898a6
+
+
+FREQUENCIES TESTED
+------------------
+10 Hz
+100 Hz
+1 kHz
+5 kHz
+10 kHz
+[Data for remaining frequencies to be appended after acquisition]
+
+
+TEAM DIVISION
+-------------
+Team A — Data Acquisition
+Team B — Parallel Data Analysis (compute the following metrics as data comes in)
+
+
+METRICS TO COMPUTE
+------------------
+
+[ COMPULSORY ]
+  Mean (DC Offset)
+  Standard Deviation
+  Variance
+  RMS (Root Mean Square)
+  Peak Value
+  Peak-to-Peak Value
+  Minimum
+  Maximum
+  Range
+  Signal-to-Noise Ratio (SNR)
+  Noise RMS
+  Noise Floor
+  Crest Factor
+  Form Factor
+  Skewness
+  Kurtosis
+  Zero Crossing Rate
+  Total Harmonic Distortion (THD)
+  THD + Noise (THD+N)
+  SINAD (Signal-to-Noise and Distortion Ratio)
+  Dynamic Range
+  Effective Number of Bits (ENOB)
+  Dominant Frequency
+  Bandwidth
+  Autocorrelation
+  Integral Non-Linearity (INL)
+  Differential Non-Linearity (DNL)
+
+[ FULL LIST ]
+  Mean, Median, Mode
+  Variance, Standard Deviation, Standard Error
+  RMS, Peak Value, Peak-to-Peak Value
+  Minimum, Maximum, Range, Sum
+  Energy, Power
+  SNR, SINAD
+  THD, THD+N
+  Noise Floor, Noise RMS, Noise Variance
+  Skewness, Kurtosis
+  Crest Factor, Form Factor, Shape Factor
+  Impulse Factor, Margin Factor, Clearance Factor
+  Coefficient of Variation
+  Zero Crossing Rate
+  Mean Absolute Value
+  Median Absolute Deviation (MAD)
+  Interquartile Range (IQR)
+  Autocorrelation, Cross-correlation, Covariance
+  Dominant Frequency, Frequency Mean, Frequency Variance
+  Spectral Centroid, Spectral Spread, Spectral Flatness
+  Spectral Entropy, Spectral Kurtosis, Spectral Skewness
+  Bandwidth, Occupied Bandwidth
+  Total Energy, Average Power, Peak Power
+  DC Offset
+  Quantization Noise
+  ENOB (Effective Number of Bits)
+  Dynamic Range
+  Linearity Error
+  INL (Integral Non-Linearity)
+  DNL (Differential Non-Linearity)
+
+
+FAULT TYPES REFERENCE
+---------------------
+
+Grounding & Shielding
+  Ground fault
+  Ground loop
+  Floating ground
+  Improper grounding
+  Shielding failure
+  Unshielded cable
+  Shield disconnected
+
+Interference
+  Electromagnetic interference (EMI)
+  Radio frequency interference (RFI)
+  Power line interference (50/60 Hz noise)
+  Cross-talk
+  External noise coupling
+  Noise injection
+
+Connection & Cable
+  Loose connection
+  Intermittent connection
+  Open circuit
+  Short circuit
+  Cable fault
+  Cable attenuation
+  Cable impedance mismatch
+  Cable damage
+
+Signal Issues
+  Signal attenuation
+  Signal clipping
+  Signal distortion
+
+Sensor Faults
+  Sensor fault
+  Sensor drift
+  Sensor offset
+  Sensor saturation
+
+DAQ Hardware
+  DAQ hardware fault
+  Gain error
+  Offset error
+  Non-linearity
+  Quantization error
+
+Sampling Faults
+  Aliasing
+  Timing jitter
+  Sample loss
+
+Power Supply
+  Power supply noise
+  Power supply ripple
+  Power supply fluctuation
