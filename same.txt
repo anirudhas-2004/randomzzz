@@ -1,0 +1,177 @@
+================================================================================
+                     PROJECT STATUS & DIRECTION — MEETING NOTE
+================================================================================
+
+Sir, I want to walk you through where we are, why certain experiments didn't
+work out, what we have done, and what we think is the best path forward.
+
+--------------------------------------------------------------------------------
+1. WHAT WE HAVE DONE
+--------------------------------------------------------------------------------
+
+We set up the DAQ system — PXI-4472 with the AFG1022 as the signal source —
+and acquired data for sine waves at 1 kHz, 5 kHz, 10 kHz, and 20 kHz at a
+sample rate of 100 kHz. We also collected square waves, impulse signals, and
+ramp signals.
+
+We figured out LabVIEW enough to acquire multi-channel data, write it to .lvm
+files, and understand the signal flow. This took time but we understand the
+system now.
+
+We have written a Python analysis pipeline that takes any .lvm file and
+computes the following from it:
+
+  Time Domain:
+    Mean, Median, DC Offset, Variance, Std Dev, RMS, Peak, Peak-to-Peak,
+    Min/Max, Mean Absolute Value, Crest Factor, Impulse Factor, Coefficient
+    of Variation, IQR, Skewness, Kurtosis, Zero Crossing Rate
+
+  Frequency Domain:
+    SNR, THD, THD+N, SINAD, ENOB, SFDR, Dynamic Range, Noise Floor,
+    Noise RMS, Noise Variance, Dominant Frequency, Spectral Centroid,
+    Spectral Spread, Spectral Flatness, Spectral Entropy, Spectral Kurtosis,
+    Spectral Skewness, Bandwidth (-3dB), Occupied Bandwidth (99%)
+
+  Output: A printed table of all metrics + a saved 4-panel plot (time domain,
+  spectrum, power spectrum, amplitude PDF with theoretical overlay).
+
+The next step is simply running this on the data we collected and documenting
+the results as the DAQ validation output.
+
+--------------------------------------------------------------------------------
+2. WHY THE PHYSICAL FAULT EXPERIMENTS WILL NOT WORK
+--------------------------------------------------------------------------------
+
+Sir, we tried loose connections, cable shaking, and adjacent channel crosstalk.
+We saw nothing. This is not because we did something wrong — it is because the
+hardware is designed to suppress exactly these things. Here is why, fault
+category by fault category:
+
+  EMI / Magnetic interference (the magnet experiment):
+    A permanent magnet produces a static field. It only induces a current in
+    a conductor if the magnet is moving. Even if we move it, the frequency of
+    interference is whatever speed we move our hand — maybe 1-2 Hz — which is
+    completely invisible in a 100 kHz acquisition. Even if we used a proper AC
+    electromagnet, our BNC cables are coaxially shielded (outer conductor
+    surrounds the inner signal conductor), and the PXI-4472 uses differential
+    inputs which cancel any noise induced equally on both conductors. Proper EMI
+    susceptibility testing uses calibrated RF injection equipment, coupling
+    networks, and screened rooms per IEC 61000. A handheld magnet is not a
+    recognized methodology for this.
+
+  Ground loops, floating ground, shielding failure:
+    The PXI chassis uses star grounding — all cards share one common ground
+    reference inside the chassis. To create a real ground loop we would have to
+    actively fight the chassis architecture by modifying hardware. Without that,
+    this experiment cannot produce a visible result.
+
+  Loose connection, cable shaking, intermittent connection:
+    We tried this. The BNC locking mechanism and shielding suppressed it. Even
+    if we had seen something, it would be random and irreproducible — we cannot
+    quantify "how loose" a connection is, so we cannot build a repeatable fault
+    dataset from it.
+
+  Crosstalk:
+    The PXI-4472 has greater than 100 dB channel isolation. It is specifically
+    engineered for dynamic signal acquisition. We tried adjacent channel
+    injection and saw nothing, as expected.
+
+  Cable faults (impedance mismatch, attenuation, open/short circuit):
+    These are real and measurable, but the correct instrument is a VNA (Vector
+    Network Analyzer) using TDR measurements. A DAQ card is not the right tool.
+    We do not have a VNA.
+
+  Power supply noise and ripple:
+    Real phenomenon, but requires a power rail probe on an oscilloscope
+    connected directly to the chassis supply lines. It cannot be isolated in
+    our signal acquisition data.
+
+  DAQ hardware faults (gain error, offset error, non-linearity, aliasing,
+  quantization, timing jitter):
+    These are already captured by our Python metrics — ENOB, THD, SNR, SINAD,
+    SFDR. We are already characterizing these. This is covered.
+
+  Sensor faults (drift, offset, saturation, failure):
+    These are defined relative to a physical transducer measuring a real
+    process variable. Without a sensor there is no "true value" to deviate
+    from. These cannot be tested without sensors.
+
+Summary: Every fault in the list either requires equipment we do not have,
+is already covered by our metrics pipeline, or requires actual sensors.
+The physical manipulation experiments have no further productive path.
+
+--------------------------------------------------------------------------------
+3. WHAT WE THINK SHOULD BE DONE NEXT
+--------------------------------------------------------------------------------
+
+Sir, you had mentioned two things earlier that we think are the right path:
+
+  (a) Software simulation of sensor faults — you agreed to this approach.
+  (b) Getting us good and faulty sensors to work with real data.
+
+For (a), we can do this right now at home. The plan is:
+
+  Step 1 — Take our clean captured data (or generate synthetic clean signals).
+
+  Step 2 — Inject standard fault types in software at controlled, parameterized
+            severities:
+              - Bias / DC offset fault     (add a constant)
+              - Gain fault                 (multiply by a factor != 1)
+              - Drift fault                (add a slow ramp over time)
+              - Noise degradation          (add Gaussian noise)
+              - Spike / impulse fault      (inject random large samples)
+              - Stuck-at / complete failure (replace with a constant)
+
+  Step 3 — Extract all features from each clean and faulty signal window.
+
+  Step 4 — Build a labeled dataset: each row is one signal window, each column
+            is a feature, the label is the fault type and severity.
+
+  Step 5 — Train a classifier (Random Forest to start — explainable, works well
+            on tabular feature data, gives feature importance rankings).
+
+  Step 6 — When real sensors arrive, test the classifier on real data and
+            retrain if needed.
+
+  Step 7 — Build the GUI around the classifier.
+
+This gives us a working prototype that is ready to validate the moment sensors
+arrive. It also gives us a complete fault library with known feature signatures
+for each fault type.
+
+For (b), we would like to ask sir: is there a timeline on when sensors —
+working or faulty — might be available? Even one faulty sensor would let us
+validate that our simulation approach generalises to real hardware.
+
+We also need to ask about data transfer. All our acquired data is currently on
+the LabVIEW PC. We need a way to get it to our machines to run the Python
+analysis. What is the approved procedure for moving files out of the lab?
+
+--------------------------------------------------------------------------------
+4. WHAT THIS PROJECT BECOMES
+--------------------------------------------------------------------------------
+
+The full project, as we understand it from your brief, is:
+
+  Problem: GTRE test cell engineers have to stop Kaveri engine runs when sensor
+  readings look anomalous. Often this turns out to be a sensor fault, not an
+  engine fault. Identifying this quickly avoids unnecessary test interruptions.
+
+  Solution: A real-time signal processing pipeline that takes sensor data,
+  extracts features, classifies the signal as healthy or a specific fault type,
+  and displays the result to the test cell operator through a GUI.
+
+  Our deliverables:
+    - DAQ chain validation (done — pending results documentation)
+    - Fault taxonomy with physical justification of each fault type
+    - Synthetic fault injection pipeline and labeled dataset
+    - Trained fault classifier with feature importance analysis
+    - GUI prototype displaying signal health and fault classification
+    - Full written report suitable for college submission
+
+This is a complete and well-scoped project. We can make significant progress
+on all of the software components this week from home while we wait for sensors.
+
+================================================================================
+                              END OF NOTE
+================================================================================
