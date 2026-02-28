@@ -68,7 +68,7 @@ Also need to ask about **data transfer** — all acquired data is on the LabVIEW
 
 ## What This Project Becomes
 
-**Problem** — GTRE test cell engineers stop Kaveri engine runs when sensor readings look anomalous. Often this is a sensor fault, not an engine fault. Identifying this quickly avoids unnecessary test interruptions.
+**Problem** — Test cell engineers stop engine runs when sensor readings look anomalous. Often this is a sensor fault, not an engine fault. Identifying this quickly avoids unnecessary test interruptions.
 
 **Solution** — A real-time signal processing pipeline that takes sensor data, extracts features, classifies the signal as healthy or a specific fault type, and displays the result to the operator through a GUI.
 
