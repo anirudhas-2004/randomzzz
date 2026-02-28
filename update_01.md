@@ -6,15 +6,15 @@ date: 2026-02-28
 
 ## Status
 
-App is mostly perfect bro. Some minor issues we need to fix (aliasing etc.) but I don't think sir will notice.
+App is mostly perfect. Some minor issues we need to fix like aliasing etc.
 
-Right now I am reading random processes and FFT things from some textbook.
+Right now I am reading random processes and FFT things from this textbook.
 
 ![Index](textindex.JPG)
 
 Half day tomorrow is gone (I have to go to some temple in the morning) but I will come back home and work on this.
 
-Then I will quickly validate everything in app. Right now genuinely don't understand half the things being da :(
+Then I will quickly validate everything in app. Right now I don't understand half the stuff :(
 
 ## Plan
 
