@@ -10,7 +10,7 @@ App is mostly perfect bro. Some minor issues we need to fix (aliasing etc.) but 
 
 Right now I am reading random processes and FFT things from some textbook.
 
-![Bullshit image](textindex.JPG)
+![Index](textindex.JPG)
 
 Half day tomorrow is gone (I have to go to some temple in the morning) but I will come back home and work on this.
 
