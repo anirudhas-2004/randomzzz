@@ -10,7 +10,7 @@ App looks mostly good. Some minor issues to figure out (aliasing etc.) but nothi
 
 Currently reading up on random processes — autocorrelation, PSD, and related.
 
-![Book index — random processes, autocorrelation, PSD](textindex.jpg)
+![Book index — random processes, autocorrelation, PSD](textindex.JPG)
 
 Half day tomorrow is gone (temple in the morning) but will resume reading after.
 
