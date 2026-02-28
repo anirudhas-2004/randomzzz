@@ -6,19 +6,19 @@ date: 2026-02-28
 
 ## Status
 
-App looks mostly good. Some minor issues to figure out (aliasing etc.) but nothing critical for now.
+App is mostly perfect bro. Some minor issues we need to fix (aliasing etc.) but I don't think sir will notice.
 
-Currently reading up on random processes — autocorrelation, PSD, and related.
+Right now I am reading random processes and FFT things from some textbook.
 
-![Book index — random processes, autocorrelation, PSD](textindex.JPG)
+![Bullshit image](textindex.JPG)
 
-Half day tomorrow is gone (temple in the morning) but will resume reading after.
+Half day tomorrow is gone (I have to go to some temple in the morning) but I will come back home and work on this.
 
-Once the theory is clear, will validate everything in the app. Right now genuinely don't understand half the things being measured.
+Then I will quickly validate everything in app. Right now genuinely don't understand half the things being da :(
 
 ## Plan
 
-a. Share app with sir tomorrow — tell him all issues resolved within the week (confident on this)
+a. Share app with sir tomorrow — tell him some issues resolved within the week (confident on this)
 
 b. Solve the remaining issues, write some inference about the data
 
