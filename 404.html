@@ -175,20 +175,6 @@
 
     .cta .arrow { font-size: 14px; }
 
-    /* Countdown */
-    .countdown {
-      margin-top: 28px;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      text-transform: uppercase;
-      animation: slideIn 0.4s ease 0.4s both;
-    }
-
-    .countdown span {
-      color: var(--accent);
-      font-weight: 500;
-    }
 
     footer {
       margin-top: 64px;
@@ -206,10 +192,11 @@
 
   <div class="quote-block">
     <p class="quote-text">
-      "I've been in tighter spots than this and pulled out just fine —
-      unfortunately, <em>this URL</em> has not."
+      "Somewhere, a developer hardcoded a link instead of using the index,
+      went home, and slept like a baby. You are living in the consequences
+      of <em>that man's choices.</em>"
     </p>
-    <p class="quote-attribution">— Unknown engineer, allegedly sober</p>
+    <p class="quote-attribution">— The server, visibly disappointed</p>
   </div>
 
   <p class="message">
@@ -222,22 +209,8 @@
     ← back to home <span class="arrow"></span>
   </a>
 
-  <p class="countdown">redirecting in <span id="timer">10</span>s</p>
 </div>
 
 <footer>Signal Lab</footer>
-
-<script>
-  let t = 10;
-  const el = document.getElementById('timer');
-  const interval = setInterval(() => {
-    t--;
-    el.textContent = t;
-    if (t <= 0) {
-      clearInterval(interval);
-      window.location.href = 'index.html';
-    }
-  }, 1000);
-</script>
 </body>
 </html>
