@@ -25,8 +25,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 80px 24px 40px;
-      overflow: hidden;
+      padding: 56px 24px 40px;
+      overflow-y: auto;
     }
 
     /* Scanline overlay */
@@ -57,7 +57,7 @@
     .big-404 {
       font-family: 'IBM Plex Sans', sans-serif;
       font-weight: 300;
-      font-size: clamp(80px, 20vw, 160px);
+      font-size: clamp(48px, 12vw, 96px);
       letter-spacing: -0.04em;
       line-height: 1;
       color: var(--surface);
@@ -85,15 +85,15 @@
       letter-spacing: 0.2em;
       color: var(--muted);
       text-transform: uppercase;
-      margin-top: 8px;
-      margin-bottom: 32px;
+      margin-top: 4px;
+      margin-bottom: 20px;
     }
 
     .divider {
       width: 40px;
       height: 1px;
       background: var(--accent);
-      margin-bottom: 32px;
+      margin-bottom: 20px;
     }
 
     /* Quote block */
@@ -102,7 +102,7 @@
       border: 1px solid var(--border);
       border-left: 2px solid var(--accent);
       padding: 20px 24px;
-      margin-bottom: 40px;
+      margin-bottom: 24px;
       animation: slideIn 0.4s ease 0.1s both;
     }
 
@@ -135,7 +135,7 @@
       font-size: 12px;
       line-height: 1.8;
       color: var(--muted);
-      margin-bottom: 36px;
+      margin-bottom: 24px;
       animation: slideIn 0.4s ease 0.2s both;
     }
 
@@ -192,17 +192,13 @@
 
   <div class="quote-block">
     <p class="quote-text">
-      "Somewhere, a developer hardcoded a link instead of using the index,
-      went home, and slept like a baby. You are living in the consequences
-      of <em>that man's choices.</em>"
+      "This is what happens when you trust a bare URL."
     </p>
-    <p class="quote-attribution">— The server, visibly disappointed</p>
+    <p class="quote-attribution">— The server, unsurprised</p>
   </div>
 
   <p class="message">
-    You've navigated somewhere that doesn't exist.<br/>
-    Links shared directly to posts are <code>fragile</code> — always use the home
-    page to browse notes. It's right there. It won't bite.
+    Direct links are <code>fragile</code>. Use the home page.
   </p>
 
   <a class="cta" href="index.html">
