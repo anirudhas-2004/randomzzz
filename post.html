@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0e0e0e;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --accent: #c8f542;
+      --text: #e8e8e8;
+      --muted: #666;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 24px 80px;
+    }
+    article { width: 100%; max-width: 640px; }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+      transition: color 0.15s;
+    }
+    .back:hover { color: var(--accent); }
+
+    .post-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    #post-title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 300;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+    }
+    #post-title span { color: var(--accent); }
+    .divider {
+      width: 40px; height: 1px;
+      background: var(--accent);
+      margin: 24px 0 48px;
+    }
+
+    /* rendered markdown */
+    .post-body { display: flex; flex-direction: column; gap: 28px; }
+    .post-body h2 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: -12px;
+    }
+    .post-body h3 {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: -12px;
+    }
+    .post-body p {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #c8c8c8;
+    }
+    .post-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid #444; }
+    .post-body a:hover { border-color: var(--accent); }
+    .post-body ul, .post-body ol {
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #c8c8c8;
+    }
+    .post-body li { margin-bottom: 4px; }
+    .post-body code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      font-size: 12px;
+      color: var(--accent);
+    }
+    .post-body pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #c8c8c8;
+    }
+    .post-body pre code {
+      background: none; border: none; padding: 0; color: inherit;
+    }
+    .post-body blockquote {
+      border-left: 2px solid var(--accent);
+      padding: 14px 20px;
+      background: var(--surface);
+      font-size: 12px;
+      line-height: 1.7;
+      color: #c8c8c8;
+    }
+    .post-body img {
+      width: 100%;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .post-body figure { display: flex; flex-direction: column; gap: 8px; }
+    .post-body figcaption {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .post-body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .post-body th {
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px;
+    }
+    .post-body td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: #c8c8c8;
+    }
+    .post-body tr:last-child td { border-bottom: none; }
+    .post-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    #loading { color: var(--muted); font-size: 12px; letter-spacing: 0.1em; }
+    footer { margin-top: 72px; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
+  </style>
+</head>
+<body>
+<article>
+  <a class="back" href="index.html">← index</a>
+  <p class="post-label" id="post-label">Signal Lab</p>
+  <h1 id="post-title"><span id="loading">loading…</span></h1>
+  <div class="divider"></div>
+  <div class="post-body" id="post-body"></div>
+</article>
+<footer>Signal Lab</footer>
+
+<script>
+// ── Tiny Markdown parser ─────────────────────────────────────────────────────
+
+function parseFrontmatter(text) {
+  const match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if (!match) return { meta: {}, body: text };
+  const meta = {};
+  match[1].split('\n').forEach(line => {
+    const [k, ...v] = line.split(':');
+    if (k) meta[k.trim()] = v.join(':').trim();
+  });
+  return { meta, body: match[2] };
+}
+
+function parseMarkdown(md) {
+  let html = '';
+  const lines = md.split('\n');
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Fenced code block
+    if (line.startsWith('```')) {
+      const lang = line.slice(3).trim();
+      let code = '';
+      i++;
+      while (i < lines.length && !lines[i].startsWith('```')) {
+        code += lines[i] + '\n';
+        i++;
+      }
+      html += `<pre><code>${esc(code.trimEnd())}</code></pre>`;
+      i++;
+      continue;
+    }
+
+    // Headings
+    if (/^#{1,6}\s/.test(line)) {
+      const level = line.match(/^(#+)/)[1].length;
+      const text = inline(line.replace(/^#+\s/, ''));
+      html += `<h${level}>${text}</h${level}>`;
+      i++; continue;
+    }
+
+    // HR
+    if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) {
+      html += '<hr>';
+      i++; continue;
+    }
+
+    // Blockquote
+    if (line.startsWith('> ')) {
+      let content = '';
+      while (i < lines.length && lines[i].startsWith('> ')) {
+        content += lines[i].slice(2) + '\n';
+        i++;
+      }
+      html += `<blockquote>${inline(content.trim())}</blockquote>`;
+      continue;
+    }
+
+    // Unordered list
+    if (/^[-*+]\s/.test(line)) {
+      html += '<ul>';
+      while (i < lines.length && /^[-*+]\s/.test(lines[i])) {
+        html += `<li>${inline(lines[i].replace(/^[-*+]\s/, ''))}</li>`;
+        i++;
+      }
+      html += '</ul>';
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+\.\s/.test(line)) {
+      html += '<ol>';
+      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
+        html += `<li>${inline(lines[i].replace(/^\d+\.\s/, ''))}</li>`;
+        i++;
+      }
+      html += '</ol>';
+      continue;
+    }
+
+    // Table
+    if (line.includes('|') && lines[i+1] && /^\|?[\s\-|:]+\|?$/.test(lines[i+1])) {
+      const headers = line.split('|').map(c => c.trim()).filter(Boolean);
+      html += '<table><thead><tr>' + headers.map(h => `<th>${inline(h)}</th>`).join('') + '</tr></thead><tbody>';
+      i += 2;
+      while (i < lines.length && lines[i].includes('|')) {
+        const cells = lines[i].split('|').map(c => c.trim()).filter(Boolean);
+        html += '<tr>' + cells.map(c => `<td>${inline(c)}</td>`).join('') + '</tr>';
+        i++;
+      }
+      html += '</tbody></table>';
+      continue;
+    }
+
+    // Image (standalone line) → figure with caption
+    const imgMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+    if (imgMatch) {
+      const [, alt, src] = imgMatch;
+      html += `<figure><img src="${src}" alt="${alt}" />${alt ? `<figcaption>${esc(alt)}</figcaption>` : ''}</figure>`;
+      i++; continue;
+    }
+
+    // Blank line
+    if (line.trim() === '') { i++; continue; }
+
+    // Paragraph
+    let para = '';
+    while (i < lines.length && lines[i].trim() !== '' && !lines[i].startsWith('#') && !lines[i].startsWith('```') && !lines[i].startsWith('>') && !/^[-*+]\s/.test(lines[i]) && !/^\d+\.\s/.test(lines[i])) {
+      para += lines[i] + ' ';
+      i++;
+    }
+    if (para.trim()) html += `<p>${inline(para.trim())}</p>`;
+  }
+
+  return html;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function inline(s) {
+  return s
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" />')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+    .replace(/_([^_]+)_/g, '<em>$1</em>');
+}
+
+// ── Load & render ────────────────────────────────────────────────────────────
+
+async function load() {
+  const params = new URLSearchParams(location.search);
+  const src = params.get('src');
+
+  if (!src) {
+    document.getElementById('loading').textContent = 'no ?src= specified';
+    return;
+  }
+
+  let text;
+  try {
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(res.status);
+    text = await res.text();
+  } catch(e) {
+    document.getElementById('loading').textContent = 'could not load file';
+    return;
+  }
+
+  const { meta, body } = parseFrontmatter(text);
+
+  // Title
+  const titleEl = document.getElementById('post-title');
+  if (meta.title) {
+    const words = meta.title.split('—');
+    if (words.length > 1) {
+      titleEl.innerHTML = `${esc(words[0].trim())} —<br/><span>${esc(words.slice(1).join('—').trim())}</span>`;
+    } else {
+      titleEl.innerHTML = `<span>${esc(meta.title)}</span>`;
+    }
+  } else {
+    titleEl.innerHTML = esc(src);
+  }
+
+  // Label
+  const labelEl = document.getElementById('post-label');
+  const parts = [];
+  if (meta.index) parts.push(`Note ${meta.index}`);
+  if (meta.date) parts.push(meta.date);
+  if (meta.subtitle) parts.push(meta.subtitle);
+  labelEl.textContent = parts.length ? `Signal Lab // ${parts.join(' · ')}` : 'Signal Lab';
+
+  // Page title
+  document.title = meta.title || src;
+
+  // Body
+  document.getElementById('post-body').innerHTML = parseMarkdown(body);
+}
+
+load();
+</script>
+</body>
+</html>
